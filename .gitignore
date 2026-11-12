@@ -1,0 +1,50 @@
+# ---------------------------------------------------------------------------
+# Data never goes in this repo. Code and knitted reports only.
+# A committed data file stays in git history permanently, even after deletion.
+# ---------------------------------------------------------------------------
+
+# Data and analysis objects (my addition, for omics work: these are the formats
+# that actually show up next to an .Rmd in this group and are large)
+*.rds
+*.Rds
+*.RData
+*.rda
+*.h5
+*.h5ad
+*.loom
+*.mtx
+*.bam
+*.bai
+*.fastq
+*.fastq.gz
+*.csv.gz
+*.tsv.gz
+*.adat
+data/
+Data/
+
+# R Markdown knit cache and figure dumps (standard; from github/gitignore R.gitignore)
+*_files/
+*_cache/
+/cache/
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# Python (standard; from github/gitignore Python.gitignore)
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Credentials — nothing with a key in it, ever (my addition)
+.Renviron
+.env
+*_api_key*
+*.pem
+
+# OS cruft (standard)
+.DS_Store
+Thumbs.db
