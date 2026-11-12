@@ -1,0 +1,9 @@
+# Store all text with LF line endings in the repo so the Windows PC, cqs4 and
+# the MacBook don't produce whole-file diffs every time another machine saves.
+# Same rule as WorkRecords.
+* text=auto eol=lf
+
+# Binary formats that must never be line-ending-converted.
+*.xlsx binary
+*.rds binary
+*.RData binary
