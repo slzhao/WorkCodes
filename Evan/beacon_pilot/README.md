@@ -5,7 +5,7 @@
 | `project_id` | `evan_beacon_pilot` |
 | Record | [WorkRecords/Evan/beacon_pilot.md](https://github.com/slzhao/WorkRecords/blob/main/Evan/beacon_pilot.md) |
 | PI | Evan Brittain |
-| Status | active - no code yet, data not downloaded |
+| Status | active - processing report started, data not downloaded yet |
 
 Background, collaborators, tasks and decisions live in the record. This file is
 only the index of the code in this folder.
@@ -32,4 +32,8 @@ Newest first. `current` = the version to use; `superseded by <date>` = kept as a
 
 | File | What it does | Status |
 |------|--------------|--------|
-| *none yet* | | |
+| `20261112_data_processing.qmd` | Load the SomaScan and SomaKrex iOme exports, QC them, build the analysis object | current - template only, no real data yet |
+
+`report-assets/` holds the stylesheets and helpers that came with the report template and
+is committed; `data/` holds the input files and is never committed. The `data/` folder
+currently holds only the template's example file.

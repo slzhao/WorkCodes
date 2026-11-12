@@ -1,0 +1,16 @@
+/* reporttemplates, Quarto style: adjustments on top of Quarto's flatly/darkly theme. */
+
+/* Wide outputs: wide blocks also carry Quarto's .column-screen-inset-right class, so they
+   extend into whatever space the screen has on the right. With margin-width: 0 in the report
+   header, no space is reserved when a report has no wide block. Same 1700px limit as the
+   other styles. */
+.column-screen-inset-right { max-width: var(--report-wide-width); }
+
+/* shared.css caps .figure-wide. Quarto turns a wide figure block into a full-screen layout
+   grid, so the cap would shift the figure left of the text. */
+.figure-wide.page-columns { max-width: none; }
+
+/* R output (printed results) in the same box as code blocks, as the other styles do. Colours
+   copy shared.css's .code-fold pre; like the tables, the box stays light in dark mode. */
+.cell-output pre { background: #f1f4f5; border: 1px solid #d7e2e5; border-radius: 4px; padding: 14px; color: #243747; }
+.cell-output pre code { color: inherit; }
