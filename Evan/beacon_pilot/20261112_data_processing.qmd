@@ -64,6 +64,9 @@ for 200 patients on two drugs. Replace it with your own files.
 
 ```{r data}
 # List every file the report reads, so the checksum table below covers all of them.
+workDir="D:\\OneDrive - VUMC\\work\\EvanBrittain\\"
+dataFile=""
+
 input_files <- c(trial = "data/example-trial.csv")
 dat <- utils::read.csv(input_files[["trial"]])
 ```
