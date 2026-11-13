@@ -5,7 +5,7 @@
 | `project_id` | `bo_psorc_paraneoplastic_syndromes` |
 | Record | [WorkRecords/Bo/psorc_paraneoplastic_syndromes.md](https://github.com/slzhao/WorkRecords/blob/main/Bo/psorc_paraneoplastic_syndromes.md) |
 | PI | Harold "Bo" N. Lovvorn, III, M.D. |
-| Status | active - report started from the template, data not loaded yet |
+| Status | active - first report in progress (reads the raw export, Table 1 of all variables) |
 
 Background, collaborators, tasks and decisions live in the record. This file is
 only the index of the code in this folder.
@@ -32,7 +32,7 @@ Newest first. `current` = the version to use; `superseded by <date>` = kept as a
 
 | File | What it does | Status |
 |------|--------------|--------|
-| `20261112_data_analysis_report.qmd` | Load the PSORC PNS dataset, define the PNS and `timing_symptom_onset` exposures, build Table 1 of the key variables | current - template only, no real data yet |
+| `20261112_data_analysis_report.qmd` | Load the PSORC PNS dataset, define the PNS and `timing_symptom_onset` exposures, build Table 1 of the key variables | current - in progress: reads the raw export and gives a Table 1 of all variables (edits and knitted `.html` not yet committed, 2026-11-12) |
 
 `report-assets/` holds the stylesheets and helpers that came with the report template and
 is committed; `data/` holds the input files and is never committed. The `data/` folder
