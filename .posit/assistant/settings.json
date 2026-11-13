@@ -1,0 +1,11 @@
+{
+  "permission": {
+    "edit": {
+      "*.qmd": "allow"
+    },
+    "bash": {
+      "cd *": "allow",
+      "python3 *": "allow"
+    }
+  }
+}
