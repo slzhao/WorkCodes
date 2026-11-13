@@ -1,0 +1,186 @@
+---
+title: "PSORC Paraneoplastic Syndromes - data analysis report"
+author: "Shilin Zhao"
+date: today
+date-format: iso
+execute:
+  echo: false   # Code switch: false = no R code in the report; true = folded code + Code menu
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly            # dark version of flatly; the switch changes colours only
+    fontsize: 21px            # body text (flatly default 17px)
+    grid:
+      body-width: 1200px      # reading column (Quarto default 800px)
+      margin-width: 0px       # no empty right margin kept in reserve (Quarto default 250px);
+                              # wide blocks use .column-screen-inset-right instead
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-title: Contents
+    code-fold: true
+    code-summary: Code
+    code-tools:
+      source: false
+    # Quarto 1.9.38 bug: with the copy button on, the Show/Hide All Code menu cannot find
+    # the folded code. Re-test on a newer Quarto before turning it back on.
+    code-copy: false
+    lightbox: true
+    embed-resources: true
+    css: [report-assets/shared.css, report-assets/quarto.css]
+---
+
+<!--
+project_id: bo_psorc_paraneoplastic_syndromes
+record:     WorkRecords/Bo/psorc_paraneoplastic_syndromes.md
+purpose:    Load the PSORC PNS neuroblastoma dataset, define the PNS (yes vs. no) and
+            timing_symptom_onset exposures, and build Table 1 of the key variables.
+status:     current
+-->
+
+```{r setup, include=FALSE}
+# Created with reporttemplates 0.2.0 (quarto style) on 2026-11-12.
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, comment = "",
+                      fig.width = 6.5, fig.height = 4.2, dpi = 150,
+                      fig.retina = 2, out.width = "100%", fig.align = "left")
+source("report-assets/report-helpers.R", local = knitr::knit_global())
+library(ggplot2)
+
+# PSORC data live in OneDrive (WorkFiles), never in this repo. Set the folder once here.
+# The Windows line uses OneDrive's own environment variable; not yet tested on the PC.
+# cqs4 has no OneDrive, so there the data would have to be copied first.
+data_dir <- switch(Sys.info()[["sysname"]],
+  Darwin  = "~/Library/CloudStorage/OneDrive-VUMC/WorkFiles/Bo/psorc_paraneoplastic_syndromes/data",
+  Windows = file.path(Sys.getenv("OneDriveCommercial"), "WorkFiles/Bo/psorc_paraneoplastic_syndromes/data"),
+  NA_character_)
+```
+
+# Overview
+
+::: {.report-note}
+**Summary.** One or two sentences on what this report shows. Replace this note or delete it.
+:::
+
+State the question, the data and the main result in a few sentences.
+
+# Data
+
+Describe the data source, inclusion criteria and exclusions. The example file,
+`data/example-trial.csv`, is the `trial` dataset from the gtsummary package: simulated data
+for 200 patients on two drugs. Replace it with your own files.
+
+```{r data}
+# List every file the report reads, so the checksum table below covers all of them.
+input_files <- c(trial = "data/example-trial.csv")
+dat <- utils::read.csv(input_files[["trial"]])
+```
+
+Each input file's MD5 checksum is a fingerprint of its exact contents: if the file changes in
+any way, the checksum changes. It shows which version of the data produced this report.
+
+```{r input-files}
+print(data.frame(file = unname(input_files), bytes = file.size(input_files),
+                 md5 = unname(tools::md5sum(input_files))), row.names = FALSE)
+```
+
+# Results
+
+Tables and figures are numbered automatically. Refer to them by label, as in the sentences
+below, so the numbers stay right when you add, remove or move one.
+
+## Baseline characteristics
+
+@tbl-baseline shows baseline characteristics by treatment. Continuous variables: mean (SD);
+categorical variables: n (%).
+
+::: {.report-table .table-standard}
+```{r}
+#| label: tbl-baseline
+#| tbl-cap: "Baseline characteristics by treatment."
+dat |>
+  gtsummary::tbl_summary(
+    by = trt, include = c(age, marker, stage, grade),
+    label = list(age ~ "Age (years)", marker ~ "Marker level (ng/mL)",
+                 stage ~ "T stage", grade ~ "Grade"),
+    statistic = list(gtsummary::all_continuous() ~ "{mean} ({sd})",
+                     gtsummary::all_categorical() ~ "{n} ({p}%)"),
+    digits = gtsummary::all_continuous() ~ 1,
+    missing = "ifany", missing_text = "Missing"
+  ) |>
+  gtsummary::add_overall(last = FALSE) |>
+  gtsummary::bold_labels() |>
+  gtsummary::as_gt() |>
+  style_gt()
+```
+:::
+
+## Small table
+
+A static summary table for the report text. @tbl-marker-grade gives the marker level by
+treatment and tumour grade.
+
+::: {.report-table .table-standard}
+```{r}
+#| label: tbl-marker-grade
+#| tbl-cap: "Marker level (ng/mL) by treatment and grade."
+dat |>
+  dplyr::filter(!is.na(marker)) |>
+  dplyr::group_by(trt, grade) |>
+  dplyr::summarise(n = dplyr::n(), mean = mean(marker), sd = sd(marker), .groups = "drop") |>
+  gt::gt(groupname_col = "trt") |>
+  gt::cols_label(grade = "Grade", n = "N", mean = "Mean", sd = "SD") |>
+  gt::fmt_number(columns = c(mean, sd), decimals = 2) |>
+  gt::tab_source_note("Patients with a missing marker level are excluded.") |>
+  style_gt()
+```
+:::
+
+## Downloadable table
+
+All rows are stored in this HTML file. Readers can search, sort and download them.
+
+::: {.report-table .table-standard}
+```{r results-table}
+result_table(dat, "trial-data")
+```
+:::
+
+## Figure
+
+@fig-marker shows marker level against age for each treatment.
+
+::: {.figure-standard}
+```{r}
+#| label: fig-marker
+#| fig-cap: "Marker level by age and treatment."
+ggplot(dat, aes(age, marker, colour = trt, shape = trt)) +
+  geom_point(size = 2.5, alpha = 0.8) +
+  scale_colour_manual(values = report_palette) +
+  labs(x = "Age (years)", y = "Marker level (ng/mL)", colour = NULL, shape = NULL)
+```
+:::
+
+```{r wide-blocks-help, include=FALSE, eval=FALSE}
+# Wide table or figure (this chunk never runs or prints). Wrap the chunk in a wide block;
+# the page widens only when a report has one.
+#
+#   ::: {.report-table .report-wide .column-screen-inset-right}
+#   (table chunk; for many columns use result_table(data, "id", wide = TRUE))
+#   :::
+#
+#   ::: {.figure-wide .report-wide .column-screen-inset-right}
+#   (figure chunk with a larger device, e.g. fig.width = 14, fig.height = 7)
+#   :::
+#
+# Numbered captions: a chunk labelled tbl-... with tbl-cap, or fig-... with fig-cap.
+# Refer to it in the text as @tbl-... or @fig-...
+```
+
+# Session info
+
+Rendered with Quarto {{< version >}}. The R version and package versions used:
+
+```{r session-info}
+sessionInfo()
+```

@@ -1,0 +1,61 @@
+/* reporttemplates: styling shared by the Quarto, Readthedown and Downcute report styles.
+   Each style keeps its own fonts and navigation; its own CSS file sets the 21px text size.
+
+   Widths (chosen 2026-11-11): reading column 1140px and regular figure 1020px (1.5 x the
+   earlier 760px and 680px); wide tables and big figures up to 1700px. Change them here. */
+:root { --report-text-width: 1140px; --report-figure-width: 1020px; --report-wide-width: 1700px; }
+
+/* Note box: ::: {.report-note} */
+.report-note { border-left: 4px solid #237a89; padding: 12px 18px; background: #edf4f5; color: #243747; margin: 18px 0 24px; max-width: var(--report-text-width); box-sizing: border-box; }
+.report-note p { margin: 0 !important; width: 100% !important; }
+
+/* Tables: wrap a table chunk in ::: {.report-table .table-standard} (text width) or
+   ::: {.report-table .report-wide ...} (wide; see the comment in the report file). */
+.table-standard { max-width: var(--report-text-width); }
+.report-table { margin: 20px 0 32px; min-width: 0; }
+.report-table > div { max-width: 100%; }
+.report-table .gt_table { margin-left: 0; margin-right: 0; }
+/* gt tables: 18px text, same in every style despite the themes' own table rules. The size is
+   also set in style_gt() (report-helpers.R), which is what applies in the Quarto style. */
+#content .report-table table.gt_table td, #content .report-table table.gt_table th {
+  font-size: 18px; padding: 10px; border-left: 0; border-right: 0;
+}
+#content .report-table table.gt_table tr { background: #fff; }
+#content .report-table table.gt_table thead th { background: #fff; }
+#content .report-table table.gt_table .gt_col_headings th { background: #edf4f5; }
+
+/* Figures: ::: {.figure-standard} (regular) or ::: {.figure-wide .report-wide ...} (wide). */
+.figure-standard { max-width: var(--report-figure-width); }
+.figure-standard img, .figure-wide img { width: 100%; height: auto; }
+.figure-wide { max-width: var(--report-wide-width); }
+.report-wide { clear: both; min-width: 0; }
+
+/* Downloadable DT tables (result_table()): 17px text. The frame is only as wide as its table
+   (columns are sized to content), up to the space available; a wider table scrolls inside. */
+.report-table .datatables { width: fit-content !important; max-width: 100%; }
+.report-table .datatables { background: #fff; color: #243747; padding: 18px; border: 1px solid #d7e2e5; border-radius: 4px; box-sizing: border-box; font: 18px/1.45 Arial, sans-serif; }
+.report-table .datatables table.dataTable { font: 17px/1.45 Arial, sans-serif !important; margin: 0 !important; color: #243747 !important; background: #fff !important; width: 100%; }
+.report-table .datatables table.dataTable thead th { background: #edf4f5 !important; color: #243747 !important; white-space: nowrap; padding: 13px 26px 13px 13px; }
+.report-table .datatables table.dataTable tbody td { white-space: nowrap; color: #243747 !important; padding: 10px 13px !important; }
+.report-table .datatables table.dataTable tbody tr { background: #fff !important; }
+.report-table .datatables table.dataTable tbody tr.odd { background: #f5f8f9 !important; }
+.report-table .dataTables_wrapper .dataTables_length, .report-table .dataTables_wrapper .dataTables_filter,
+.report-table .dataTables_wrapper .dataTables_info, .report-table .dataTables_wrapper .dataTables_paginate { color: #243747 !important; font: 17px/1.6 Arial, sans-serif; margin: 10px 0; }
+.report-table .dataTables_wrapper label { color: #243747 !important; font-size: 17px; }
+.report-table .dataTables_wrapper select, .report-table .dataTables_wrapper input { background: #fff !important; color: #243747 !important; border: 1px solid #9aacb5; border-radius: 3px; padding: 7px; }
+.report-table .dt-buttons { display: flex; flex-wrap: wrap; gap: 7px; float: none !important; margin-bottom: 10px; }
+.report-table .dt-buttons .dt-button { font: 17px/1.5 Arial, sans-serif; border: 1px solid #9aacb5; border-radius: 4px; background: #f5f8f9; color: #243747; padding: 9px 16px; cursor: pointer; }
+.report-table .dataTables_scrollBody { border-bottom: 1px solid #bacbd2 !important; }
+
+/* Folded code in the Quarto style, used only when the code switch is on. */
+.code-fold { margin: 14px 0; font: 14px/1.6 Arial, sans-serif; }
+.code-fold summary { cursor: pointer; color: #237a89; padding: 7px 10px; border: 1px solid #c5d6da; border-radius: 4px; width: fit-content; }
+.code-fold[open] summary { margin-bottom: 12px; }
+.code-fold pre { box-sizing: border-box; overflow: auto; padding: 14px; background: #f1f4f5; border: 1px solid #d7e2e5; font-size: 13px; }
+
+@media (max-width: 700px) {
+  .report-table .datatables { padding: 10px; }
+  .report-table .dataTables_filter { float: none; text-align: left; }
+  .report-table .dataTables_paginate { float: none; text-align: left; }
+}
+@media print { .code-fold, .code-folding-btn, .dt-buttons, .dataTables_filter, .dataTables_length, .dataTables_paginate { display: none !important; } }
